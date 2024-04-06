@@ -1,0 +1,14 @@
+
+================ 工作紀錄 ================
+    docker start mysql80
+    docker exec -it mysql80 bash
+    mysql -uroot -proot
+
+================ 建立 DB schema ================
+    CREATE DATABASE IF NOT EXISTS 'mydb' DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+    create user 'benny'@'%' identified by 'benny'; -- Creates the user
+    grant all on mydb.* to 'benny'@'%'; -- Grants all privileges to the new user on the database
+    #
+    set GLOBAL validate_password.policy=0;
+    set GLOBAL validate_password.length=1;
+    CREATE DATABASE IF NOT EXISTS car_analyze DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
