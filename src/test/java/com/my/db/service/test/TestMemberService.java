@@ -52,13 +52,13 @@ public class TestMemberService {
 
     @Test
     public void testGetByAccount(){
-        Member member = service.getEntityByAccount("Benny1");
+        Member member = service.getEntityByAccount("Benny");
         System.out.println(member);
     }
 
     @Test
     public void testGetById(){
-        Member member = service.getEntityById(12L);
+        Member member = service.getEntityById(1L);
         System.out.println(member);
     }
 
