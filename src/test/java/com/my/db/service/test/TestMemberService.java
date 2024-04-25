@@ -69,11 +69,11 @@ public class TestMemberService {
     @Test
     public void testGson(){
 
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-ddHH:mm:ss").create();
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
 
 
         String json = "{\"id\":1,\"account\":\"Benn\",\"password\":\"1234\",\"isActive\":1,\"name\":\"Benny\",\"createBy\":\"System\",\"createDate\":\"2024-04-25 14:30:07\",\"updateBy\":null,\"updateDate\":null}";
-        Member m = gson.fromJson(json.replaceAll(" " ,""), Member.class);
+        Member m = gson.fromJson(json, Member.class);
         System.out.println(m);
     }
 
