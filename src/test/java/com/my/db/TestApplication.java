@@ -8,17 +8,20 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @ComponentScan(basePackages = {
-        "com.my.db.service.provider"
+        "com.my.db.service.provider",
+        "com.my.db.util",
 //        "com.imbidgod.asyncService",
-        //imbidgo-redis-service
-//        "com.imbidgo.cache.service.provider"
+        //my-redis-service
+        "com.my.redis.service.provider",
 })
 
 @Import({
         //imbidgod-db-service
-        com.my.db.config.EntityServiceConfig.class
-        //imbidgo-redis-service
-//        com.imbidgod.redis.beanServiceConfig.ServiceAccessConfig.class
+        com.my.db.config.EntityServiceConfig.class,
+        //my-redis-service
+        com.my.redis.config.RedisConfig.class,
+        com.my.redis.config.RedisServiceConfig.class,
+        com.my.redis.config.RedisMessageConfig.class
 })
 
 @EnableJpaRepositories(basePackages = {
