@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @ComponentScan(basePackages = {
         "com.my.db.service.provider",
-        "com.my.db.util",
 //        "com.imbidgod.asyncService",
         //my-redis-service
         "com.my.redis.service.provider",
