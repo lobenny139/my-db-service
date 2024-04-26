@@ -45,14 +45,14 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     @Override
     public Member getEntityByAccount(String account){
         Object obj = null;
-        if(getRedisService().hasKey( cacheKey+account )){
+        if( getRedisService().hasKey( cacheKey+account ) ){
             String json = getRedisService().get(cacheKey+account).toString();
             obj = tools.convertJson2Object(json, Member.class);
         }else{
             obj = getRepository().findEntityByAccount(account);
         }
-
-        if(null != obj){
+        //
+        if(null != obj  ){
             getRedisService().set(cacheKey+account, obj, cacheTime);
             return (Member)obj;
         }else{
