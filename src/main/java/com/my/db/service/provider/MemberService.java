@@ -11,6 +11,7 @@ import com.my.db.service.IMemberService;
 import com.my.redis.service.IRedisService;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -82,6 +83,7 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         }
     }
 
+
     @Override
     public Member createEntity(Member entity) {
         entity.setUpdateDate(null);
@@ -127,6 +129,18 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
                 throw new RuntimeException("Json無法存入快取, " + e);            }
         }
         return (Iterable<Member>) obj;
+    }
+
+
+    @Override
+    public Member updateEntityByAccount(String account, Member entity) {
+        Member dbEntity = this.getEntityByAccount(account); // from db
+        dbEntity.setUpdateDate(new Date());
+
+        if(!StringUtils.isBlank(entity.getUpdateBy())){
+            dbEntity.setUpdateBy(entity.getUpdateBy());
+        }
+        return null;
     }
 
 
