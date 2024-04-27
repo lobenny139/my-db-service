@@ -4,6 +4,8 @@ import com.my.db.service.IMemberService;
 import com.my.db.service.provider.MemberService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class EntityServiceConfig {
@@ -13,6 +15,11 @@ public class EntityServiceConfig {
     @Bean(name="memberService")
     public IMemberService memberService(){
         return new MemberService();
+    }
+
+    @Bean(name="passwordEncoder")
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

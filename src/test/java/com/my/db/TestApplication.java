@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "com.my.db.service.provider",
         //my-redis-service
         "com.my.redis.service.provider",
+
 })
 
 @Import({
@@ -21,6 +22,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         com.my.redis.config.RedisConfig.class,
         com.my.redis.config.RedisServiceConfig.class,
         com.my.redis.config.RedisMessageConfig.class,
+
 })
 
 @EnableJpaRepositories(basePackages = {

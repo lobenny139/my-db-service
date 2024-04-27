@@ -14,6 +14,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +39,10 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     @Autowired(required = true)
     @Qualifier("redisService")
     protected IRedisService redisService;
+
+    @Autowired
+    @Qualifier(value = "passwordEncoder")
+    protected PasswordEncoder bcryptEncoder;
 
     protected Object json2Object(String json){
         try {
@@ -94,6 +99,9 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         if (entity.getCreateBy() == null) {
             entity.setCreateBy("System");
         }
+
+        entity.setPassword(bcryptEncoder.encode(entity.getPassword()));
+
         Member member = super.createEntity(entity);
         try {
             getRedisService().set(      cacheDB,
@@ -146,7 +154,9 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
 
         //password
         if(!StringUtils.isBlank(entity.getPassword())){
-            dbEntity.setPassword(entity.getPassword());
+//            dbEntity.setPassword(entity.getPassword());
+            dbEntity.setPassword(bcryptEncoder.encode(entity.getPassword()));
+
         }
 
         //isActive
