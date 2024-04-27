@@ -26,9 +26,9 @@ import java.util.List;
 @Service
 public class MemberService extends EntityService<Member, Long> implements IMemberService {
 
-    String cacheKey = "Table.Member.";
-    int cacheTime = 300; // seconds
-
+    static final String cacheKey = "Table.Member.";
+    static final int cacheTime = 300; // seconds
+    static final int cacheDB = 9; // redis db index
 
     @Autowired(required = true)
     @Qualifier(value = "memberRepository")
@@ -38,30 +38,46 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     @Qualifier("redisService")
     protected IRedisService redisService;
 
+    protected Object json2Object(String json){
+        try {
+            return new ObjectMapper().readValue(json, Member.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Json 無法解析, " + e);
+        }
+    }
+
+    protected Object json2Objects(String json){
+        try {
+            return new ObjectMapper().readValue(json, new TypeReference<List<Member>>() {});
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Json 無法解析, " + e);
+        }
+    }
+
     @Override
     public Member getEntityByAccount( String account )  {
         Object obj = null;
-        if (getRedisService().hasKey(cacheKey + account)) {
-            String json = getRedisService().get(cacheKey + account).toString();
-            try {
-                obj = new ObjectMapper().readValue(json, Member.class);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+        boolean findByCache = getRedisService().hasKey(cacheDB, cacheKey + account);
+        if ( findByCache ) {
+            String json = getRedisService().get(cacheDB, cacheKey + account).toString();
+            obj = json2Object(json);
         } else {
             obj = getRepository().findEntityByAccount(account);
         }
         //
-        if (null != obj) {
+        if (null != obj && !findByCache) {
             try {
-                getRedisService().set(cacheKey + account,
-                        new ObjectMapper().writeValueAsString(obj),
-                        cacheTime);
+                getRedisService().set( cacheDB,
+                                    cacheKey + account,
+                                        new ObjectMapper().writeValueAsString(obj),
+                                        cacheTime);
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Json無法存入快取, " + e);
             }
+        }
+        if(null != obj){
             return (Member) obj;
-        } else {
+        }else{
             throw new EntityNotFoundException(getChildsGenericClass().getSimpleName(), "account", account.toString());
         }
     }
@@ -78,39 +94,37 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         }
         Member member = super.createEntity(entity);
         try {
-            getRedisService().set(  cacheKey+member.getAccount(),
+            getRedisService().set(      cacheDB,
+                                    cacheKey+member.getAccount(),
                                         new ObjectMapper().writeValueAsString(entity),
                                         cacheTime
                                 );
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Json無法存入快取, " + e);
         }
         return member;
     }
 
     public Iterable<Member> getAllEntities() {
         Object obj = null;
-        if( getRedisService().hasKey( cacheKey+"All" ) ){
-            String json = getRedisService().get(cacheKey+"All").toString();
-//            obj = tools.convertJson2Object(json, List.class);
-            try {
-                obj = new ObjectMapper().readValue(json, new TypeReference<List<Member>>() {});
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+        boolean findByCache = getRedisService().hasKey(cacheDB, cacheKey + "All");
+
+        if( findByCache  ){
+            String json = getRedisService().get(cacheDB, cacheKey+"All").toString();
+            obj = json2Objects(json);
         }else{
             obj = super.getAllEntities();
         }
         //
-        if(null != obj  ){
+        if(null != obj && !findByCache ){
             try {
-                getRedisService().set(cacheKey+"All",
-                        new ObjectMapper().writeValueAsString(obj),
+                getRedisService().set(  cacheDB,
+                                    cacheKey+"All",
+                                        new ObjectMapper().writeValueAsString(obj),
                                         cacheTime
                 );
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
-            }
+                throw new RuntimeException("Json無法存入快取, " + e);            }
         }
         return (Iterable<Member>) obj;
     }
