@@ -69,83 +69,8 @@ public class TestMemberService {
         System.out.println(member);
     }
 
-    @Test
-    public void testGson(){
-//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-//        String json = "{\"id\":1,\"account\":\"Benn\",\"password\":\"1234\",\"isActive\":1,\"name\":\"Benny\",\"createBy\":\"System\",\"createDate\":\"2024-04-25 14:30:07\",\"updateBy\":null,\"updateDate\":null}";
-//        Member m = gson.fromJson(json, Member.class);
-//        System.out.println(m);
-    }
-
-    @Test
-    public void testGson2(){
-        String json = "[\n" +
-                "  {\n" +
-                "    \"id\": 1,\n" +
-                "    \"account\": \"Benn\",\n" +
-                "    \"password\": \"1234\",\n" +
-                "    \"isActive\": 1,\n" +
-                "    \"name\": \"Benny\",\n" +
-                "    \"createBy\": \"System\",\n" +
-                "    \"createDate\": \"2024-04-25 14:30:08\",\n" +
-                "    \"updateBy\": null,\n" +
-                "    \"updateDate\": null\n" +
-                "  },\n" +
-                "  {\n" +
-                "    \"id\": 2,\n" +
-                "    \"account\": \"benny\",\n" +
-                "    \"password\": \"$2a$10$RQYs52FMxAlWnNQeeuVPiOoI5OxgYwaALvN02MiDm.6F0DiiJbxrq\",\n" +
-                "    \"isActive\": 1,\n" +
-                "    \"name\": \"羅智全\",\n" +
-                "    \"createBy\": \"System\",\n" +
-                "    \"createDate\": \"2024-04-25 15:50:33\",\n" +
-                "    \"updateBy\": null,\n" +
-                "    \"updateDate\": null\n" +
-                "  }\n" +
-                "]";
-//        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-//        Object members = gson.fromJson(json, List.class);
-//        System.out.println(members);
-
-    }
 
 
-    @Test
-    public void test3() throws JsonProcessingException {
-//        String json = "[\n" +
-//                "  {\n" +
-//                "    \"id\": 1,\n" +
-//                "    \"account\": \"Benn\",\n" +
-//                "    \"password\": \"1234\",\n" +
-//                "    \"isActive\": 1,\n" +
-//                "    \"name\": \"Benny\",\n" +
-//                "    \"createBy\": \"System\",\n" +
-//                "    \"createDate\": \"2024-04-25 14:30:08\",\n" +
-//                "    \"updateBy\": null,\n" +
-//                "    \"updateDate\": null\n" +
-//                "  },\n" +
-//                "  {\n" +
-//                "    \"id\": 2,\n" +
-//                "    \"account\": \"benny\",\n" +
-//                "    \"password\": \"$2a$10$RQYs52FMxAlWnNQeeuVPiOoI5OxgYwaALvN02MiDm.6F0DiiJbxrq\",\n" +
-//                "    \"isActive\": 1,\n" +
-//                "    \"name\": \"羅智全\",\n" +
-//                "    \"createBy\": \"System\",\n" +
-//                "    \"createDate\": \"2024-04-25 15:50:33\",\n" +
-//                "    \"updateBy\": null,\n" +
-//                "    \"updateDate\": null\n" +
-//                "  }\n" +
-//                "]";
 
-        String json="[{\"id\":1,\"account\":\"Benn\",\"password\":\"1234\",\"isActive\":1,\"name\":\"Benny\",\"createBy\":\"System\",\"createDate\":\"2024-04-25 14:30:08\",\"updateBy\":null,\"updateDate\":null},{\"id\":2,\"account\":\"benny\",\"password\":\"$2a$10$RQYs52FMxAlWnNQeeuVPiOoI5OxgYwaALvN02MiDm.6F0DiiJbxrq\",\"isActive\":1,\"name\":\"羅智全\",\"createBy\":\"System\",\"createDate\":\"2024-04-25 15:50:33\",\"updateBy\":null,\"updateDate\":null}]";
-
-        ObjectMapper mapper = new ObjectMapper();
-        List<Member> members = mapper.readValue(json, new TypeReference<List<Member>>() {});
-        // 1. convert JSON array to Array objects
-//        List<Member> members = mapper.readValue(json, List.class);
-        for (Member p : members) {
-            System.out.println(p);
-        }
-    }
 
 }
