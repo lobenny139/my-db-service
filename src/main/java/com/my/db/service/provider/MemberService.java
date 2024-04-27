@@ -135,14 +135,46 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     @Override
     public Member updateEntityByAccount(String account, Member entity) {
         Member dbEntity = this.getEntityByAccount(account); // from db
+
+        // updateDate
         dbEntity.setUpdateDate(new Date());
 
+        //updateBy
         if(!StringUtils.isBlank(entity.getUpdateBy())){
             dbEntity.setUpdateBy(entity.getUpdateBy());
         }
-        return null;
+
+        //password
+        if(!StringUtils.isBlank(entity.getPassword())){
+            dbEntity.setPassword(entity.getPassword());
+        }
+
+        //isActive
+        if(entity.getIsActive() != dbEntity.getIsActive()){
+            dbEntity.setIsActive(entity.getIsActive());
+        }
+
+        //name
+        if(!StringUtils.isBlank(entity.getName())){
+            dbEntity.setName(entity.getName());
+        }
+
+        Member obj =  super.saveEntity(dbEntity);
+
+        if(getRedisService().hasKey(cacheDB, cacheKey+account)){
+            getRedisService().del(cacheDB, cacheKey+account);
+        }
+
+        return obj;
     }
 
+    @Override
+    public void deleteEntityByAccount(String account) {
+        getRepository().removeEntityByAccount(account);
+        if(getRedisService().hasKey(cacheDB, cacheKey+account)){
+            getRedisService().del(cacheDB, cacheKey+account);
+        }
+    }
 
 
 }

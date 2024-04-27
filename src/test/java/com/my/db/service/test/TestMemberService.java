@@ -14,6 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
@@ -38,14 +39,14 @@ public class TestMemberService {
     @Test
     public void testCreate() throws JsonProcessingException {
         Member entity = new Member();
-        entity.setAccount("Benn");
+        entity.setAccount("benny");
         entity.setPassword("1234");
         entity.setIsActive(1);
         entity.setName("Benny");
-//        entity.setCreateBy("Admin");
-//        entity.setCreateDate(Calendar.getInstance().getTime());
-        //System.out.println(service.createEntity(entity));
-        System.out.println(new ObjectMapper().writeValueAsString(entity));
+        entity.setCreateBy("Admin");
+        entity.setCreateDate(new Date());
+        System.out.println(service.createEntity(entity));
+        //System.out.println(new ObjectMapper().writeValueAsString(entity));
     }
 
     @Test
@@ -69,7 +70,19 @@ public class TestMemberService {
         System.out.println(member);
     }
 
+    @Test
+    public void testUpdate(){
+        String account = "benny";
+        Member member = new Member();
+        member.setName("方方");
+        System.out.println(service.updateEntityByAccount(account, member));
+    }
 
+    @Test
+    public void testDel(){
+        String account = "benny";
+        service.deleteEntityByAccount(account);
+    }
 
 
 
