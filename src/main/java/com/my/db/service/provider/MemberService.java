@@ -12,12 +12,14 @@ import com.my.redis.service.IRedisService;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +45,11 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     @Autowired
     @Qualifier(value = "passwordEncoder")
     protected PasswordEncoder bcryptEncoder;
+
+    //    https://stackoverflow.com/questions/48488735/how-can-i-get-session-from-a-common-class-in-spring-boot
+    @Autowired(required = false)
+    private ObjectFactory<HttpSession> httpSessionFactory;
+
 
     protected Object json2Object(String json){
         try {
@@ -96,9 +103,12 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         if (entity.getCreateDate() == null) {
             entity.setCreateDate(new Date());
         }
-        if (entity.getCreateBy() == null) {
-            entity.setCreateBy("System");
-        }
+
+        String currentUser = "System";
+        try{
+            currentUser = getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
+        }catch(Exception e){}
+        entity.setCreateBy(currentUser);
 
         entity.setPassword(bcryptEncoder.encode(entity.getPassword()));
 
@@ -148,9 +158,11 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         dbEntity.setUpdateDate(new Date());
 
         //updateBy
-        if(!StringUtils.isBlank(entity.getUpdateBy())){
-            dbEntity.setUpdateBy(entity.getUpdateBy());
-        }
+        String currentUser = "System";
+        try{
+            currentUser = getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
+        }catch(Exception e){}
+        dbEntity.setUpdateBy(currentUser);
 
         //password
         if(!StringUtils.isBlank(entity.getPassword())){
@@ -186,10 +198,16 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     }
 
     public void adjustEntityStatusByAccount(String account, int isActivate){
+        String currentUser = "System";
+        try{
+            currentUser = getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
+        }catch(Exception e){}
+
         if(getRedisService().hasKey(cacheDB, cacheKey+account)){
             getRedisService().del(cacheDB, cacheKey+account);
         }
-        getRepository().activateEntityByAccount(account, isActivate);
+
+        getRepository().activateEntityByAccount(account, isActivate, currentUser);
     }
 
 

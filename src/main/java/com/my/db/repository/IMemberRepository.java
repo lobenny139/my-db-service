@@ -22,8 +22,8 @@ public interface IMemberRepository extends JpaRepository<Member, Long> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(nativeQuery = true,
-            value = "update member set is_active = ?2 where account = ?1 ;")   // <-- ;一定要空一格
-    void activateEntityByAccount(String account, int activate);
+            value = "update member set is_active = ?2, update_date = now(), update_by = ?3 where account = ?1 ;")   // <-- ;一定要空一格
+    void activateEntityByAccount(String account, int activate, String update_by);
 
 
 
