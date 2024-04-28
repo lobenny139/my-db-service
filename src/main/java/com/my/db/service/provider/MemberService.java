@@ -154,19 +154,18 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
 
         //password
         if(!StringUtils.isBlank(entity.getPassword())){
-//            dbEntity.setPassword(entity.getPassword());
             dbEntity.setPassword(bcryptEncoder.encode(entity.getPassword()));
-
         }
 
-        //isActive
-        if(entity.getIsActive() != dbEntity.getIsActive()){
-            dbEntity.setIsActive(entity.getIsActive());
-        }
 
         //name
         if(!StringUtils.isBlank(entity.getName())){
             dbEntity.setName(entity.getName());
+        }
+
+        // isActive
+        if(entity.getIsActive() != null){
+            dbEntity.setIsActive(entity.getIsActive());
         }
 
         Member obj =  super.saveEntity(dbEntity);
@@ -184,6 +183,13 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         if(getRedisService().hasKey(cacheDB, cacheKey+account)){
             getRedisService().del(cacheDB, cacheKey+account);
         }
+    }
+
+    public void adjustEntityStatusByAccount(String account, int isActivate){
+        if(getRedisService().hasKey(cacheDB, cacheKey+account)){
+            getRedisService().del(cacheDB, cacheKey+account);
+        }
+        getRepository().activateEntityByAccount(account, isActivate);
     }
 
 

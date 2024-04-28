@@ -9,4 +9,6 @@ public interface IMemberService extends IEntityService<Member, Long> {
     public Member updateEntityByAccount(String account, Member member);
 
     public void deleteEntityByAccount(String account);
+
+    public void adjustEntityStatusByAccount(String account, int isActivate);
 }

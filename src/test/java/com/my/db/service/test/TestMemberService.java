@@ -39,7 +39,7 @@ public class TestMemberService {
     @Test
     public void testCreate() throws JsonProcessingException {
         Member entity = new Member();
-        entity.setAccount("benny2");
+        entity.setAccount("benny");
         entity.setPassword("1234");
         entity.setIsActive(1);
         entity.setName("Benny Lo");
@@ -82,6 +82,12 @@ public class TestMemberService {
     public void testDel(){
         String account = "benny";
         service.deleteEntityByAccount(account);
+    }
+
+    @Test
+    public void testAdjustEntityStatusByAccount(){
+        String account = "benny";
+        service.adjustEntityStatusByAccount(account, 1);
     }
 
 

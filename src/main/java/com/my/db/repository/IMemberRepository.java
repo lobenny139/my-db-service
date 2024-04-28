@@ -13,11 +13,18 @@ public interface IMemberRepository extends JpaRepository<Member, Long> {
     Member findEntityByAccount(String account);
 
 
-    @Modifying(clearAutomatically = true)
     @Transactional
+    @Modifying(clearAutomatically = true)
     @Query(nativeQuery = true,
            value = "delete from member where account = ?1 ;")   // <-- ;一定要空一格
     void removeEntityByAccount(String account);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(nativeQuery = true,
+            value = "update member set is_active = ?2 where account = ?1 ;")   // <-- ;一定要空一格
+    void activateEntityByAccount(String account, int activate);
+
 
 
 }
