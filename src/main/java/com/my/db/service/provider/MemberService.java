@@ -50,6 +50,14 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     @Autowired(required = false)
     private ObjectFactory<HttpSession> httpSessionFactory;
 
+    protected String getCurrentUser(){
+        if(getHttpSessionFactory().getObject() != null && getHttpSessionFactory().getObject().getAttribute("currentUser") != null){
+            return getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
+        }else{
+            return "Test Case";
+        }
+    }
+
 
     protected Object json2Object(String json){
         try {
@@ -104,11 +112,7 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
             entity.setCreateDate(new Date());
         }
 
-        String currentUser = "System";
-        try{
-            currentUser = getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
-        }catch(Exception e){}
-        entity.setCreateBy(currentUser);
+        entity.setCreateBy(getCurrentUser());
 
         entity.setPassword(bcryptEncoder.encode(entity.getPassword()));
 
@@ -158,11 +162,7 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         dbEntity.setUpdateDate(new Date());
 
         //updateBy
-        String currentUser = "System";
-        try{
-            currentUser = getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
-        }catch(Exception e){}
-        dbEntity.setUpdateBy(currentUser);
+        dbEntity.setUpdateBy(getCurrentUser());
 
         //password
         if(!StringUtils.isBlank(entity.getPassword())){
@@ -198,16 +198,11 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
     }
 
     public void adjustEntityStatusByAccount(String account, int isActivate){
-        String currentUser = "System";
-        try{
-            currentUser = getHttpSessionFactory().getObject().getAttribute("currentUser").toString();
-        }catch(Exception e){}
-
         if(getRedisService().hasKey(cacheDB, cacheKey+account)){
             getRedisService().del(cacheDB, cacheKey+account);
         }
 
-        getRepository().activateEntityByAccount(account, isActivate, currentUser);
+        getRepository().activateEntityByAccount(account, isActivate, getCurrentUser());
     }
 
 

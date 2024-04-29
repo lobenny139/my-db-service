@@ -39,11 +39,10 @@ public class TestMemberService {
     @Test
     public void testCreate() throws JsonProcessingException {
         Member entity = new Member();
-        entity.setAccount("benny4");
+        entity.setAccount("benny");
         entity.setPassword("1234");
         entity.setIsActive(1);
         entity.setName("Benny Lo");
-        entity.setCreateDate(new Date());
         System.out.println(service.createEntity(entity));
         //System.out.println(new ObjectMapper().writeValueAsString(entity));
     }
