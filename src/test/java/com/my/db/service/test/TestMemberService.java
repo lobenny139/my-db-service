@@ -85,7 +85,7 @@ public class TestMemberService {
     @Test
     public void testAdjustEntityStatusByAccount(){
         String account = "benny4";
-        service.adjustEntityStatusByAccount(account, 0);
+        service.updateEntityStatusByAccount(account, 0);
     }
 
 
