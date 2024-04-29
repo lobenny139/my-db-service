@@ -58,7 +58,6 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         }
     }
 
-
     protected Object json2Object(String json){
         try {
             return new ObjectMapper().readValue(json, Member.class);
@@ -197,7 +196,7 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         }
     }
 
-    public void adjustEntityStatusByAccount(String account, int isActivate){
+    public void updateEntityStatusByAccount(String account, int isActivate){
         if(getRedisService().hasKey(cacheDB, cacheKey+account)){
             getRedisService().del(cacheDB, cacheKey+account);
         }
