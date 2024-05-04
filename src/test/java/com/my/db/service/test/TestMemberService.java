@@ -1,8 +1,6 @@
 package com.my.db.service.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my.db.entity.Member;
 import com.my.db.service.IMemberService;
 import org.junit.Test;
@@ -13,9 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Date;
-import java.util.List;
 
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
@@ -50,15 +45,15 @@ public class TestMemberService {
     @Test
     public void testGetAll(){
             Iterable<Member> members = service.getAllEntities();
-            System.out.println(members);
-            for(Member m:members){
+
+            for (Member m : members) {
                 System.out.println(m);
             }
     }
 
     @Test
     public void testGetByAccount(){
-        Member member = service.getEntityByAccount("Benn");
+        Member member = service.getEntityByAccount("benny");
         System.out.println(member);
     }
 
@@ -87,6 +82,7 @@ public class TestMemberService {
         String account = "benny4";
         service.updateEntityStatusByAccount(account, 0);
     }
+
 
 
 
