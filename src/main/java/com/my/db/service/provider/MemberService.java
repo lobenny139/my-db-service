@@ -28,9 +28,9 @@ import java.util.Date;
 @Service
 public class MemberService extends EntityService<Member, Long> implements IMemberService {
 
-    static final String cacheKey = "Table.Member.";
-    static final int cacheTime = 300; // seconds
-    static final int cacheDB = 9; // redis db index
+    private static final String cacheKey = "Table.Member.";
+    private static final int cacheTime = 300; // seconds
+    private static final int cacheDB = 9; // redis db index
 
     @Autowired(required = true)
     @Qualifier(value = "memberRepository")
@@ -56,19 +56,6 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         }
     }
 
-
-    /**
-     * json 轉 Objects(Iterable)
-     * @param json
-     * @return
-     */
-//    protected Iterable<Member> json2Objects(String json){
-//        try {
-//            return new ObjectMapper().readValue(json, new TypeReference<Iterable<Member>>() {});
-//        } catch (JsonProcessingException e) {
-//            throw new RuntimeException("Json 無法解析, " + e);
-//        }
-//    }
 
     @Override
     public Member getEntityByAccount( String account )  {
