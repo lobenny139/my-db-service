@@ -1,7 +1,6 @@
 package com.my.db.service.provider;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.my.db.access.tool.EntityService;
 import com.my.db.entity.Member;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
 import java.util.Date;
-import java.util.List;
 
 
 @Getter
@@ -58,21 +56,19 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         }
     }
 
-    protected Object json2Object(String json){
-        try {
-            return new ObjectMapper().readValue(json, Member.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Json 無法解析, " + e);
-        }
-    }
 
-    protected Object json2Objects(String json){
-        try {
-            return new ObjectMapper().readValue(json, new TypeReference<List<Member>>() {});
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Json 無法解析, " + e);
-        }
-    }
+    /**
+     * json 轉 Objects(Iterable)
+     * @param json
+     * @return
+     */
+//    protected Iterable<Member> json2Objects(String json){
+//        try {
+//            return new ObjectMapper().readValue(json, new TypeReference<Iterable<Member>>() {});
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException("Json 無法解析, " + e);
+//        }
+//    }
 
     @Override
     public Member getEntityByAccount( String account )  {
@@ -98,7 +94,7 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
         if(null != obj){
             return (Member) obj;
         }else{
-            throw new EntityNotFoundException(getChildsGenericClass().getSimpleName(), "account", account.toString());
+            throw new EntityNotFoundException(getRuntimecClass().getSimpleName(), "account", account.toString());
         }
     }
 
@@ -113,7 +109,7 @@ public class MemberService extends EntityService<Member, Long> implements IMembe
 
         entity.setCreateBy(getCurrentUser());
 
-        entity.setPassword(bcryptEncoder.encode(entity.getPassword()));
+        entity.setPassword(getBcryptEncoder().encode(entity.getPassword()));
 
         Member member = super.createEntity(entity);
         try {
