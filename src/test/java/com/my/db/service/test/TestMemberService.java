@@ -53,7 +53,7 @@ public class TestMemberService {
 
     @Test
     public void testGetByAccount(){
-        Member member = service.getEntityByAccount("benny");
+        Member member = service.getEntityByAccount("benny1");
         System.out.println(member);
     }
 
